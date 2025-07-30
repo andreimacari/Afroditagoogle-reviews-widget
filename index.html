@@ -1,12 +1,55 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Google Reviews</title>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB3IJx-psHu00yy5RJe05v-BBvUkadVapU&libraries=places"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=YOUR_NEW_API_KEY_HERE&libraries=places&callback=initialize">
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f9f9f9;
+      padding: 40px;
+      margin: 0;
+      color: #333;
+    }
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+      margin-bottom: 40px;
+    }
+    .review {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      padding: 20px;
+      margin-bottom: 20px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .review strong {
+      font-size: 1.1em;
+      color: #000;
+    }
+    .stars {
+      color: #f1c40f;
+      margin: 5px 0;
+      font-size: 16px;
+    }
+    .review-text {
+      font-size: 15px;
+      margin-top: 10px;
+      line-height: 1.5;
+    }
+  </style>
   <script>
     function initialize() {
       const request = {
-        placeId: 'ChIJGdw8SgB9yUARn6eDokM6r98',
+        placeId: 'YOUR_PLACE_ID_HERE',
         fields: ['name', 'rating', 'reviews']
       };
 
@@ -17,20 +60,24 @@
           const reviewsContainer = document.getElementById('reviews');
           place.reviews.forEach(review => {
             const reviewEl = document.createElement('div');
+            reviewEl.className = 'review';
+
+            const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+
             reviewEl.innerHTML = `
-              <strong>${review.author_name}</strong> - ${review.rating}★<br>
-              ${review.text}<hr>
+              <strong>${review.author_name}</strong>
+              <div class="stars">${stars}</div>
+              <div class="review-text">${review.text}</div>
             `;
             reviewsContainer.appendChild(reviewEl);
           });
         }
       });
     }
-    window.onload = initialize;
   </script>
 </head>
 <body>
-  <h2>Customer Reviews</h2>
+  <h2>Ce spun clienții noștri</h2>
   <div id="reviews"></div>
 </body>
 </html>
