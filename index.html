@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Google Reviews</title>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB3IJx-psHu00yy5RJe05v-BBvUkadVapU&libraries=places"></script>
+  <script>
+    function initialize() {
+      const request = {
+        placeId: 'ChIJGdw8SgB9yUARn6eDokM6r98',
+        fields: ['name', 'rating', 'reviews']
+      };
+
+      const service = new google.maps.places.PlacesService(document.createElement('div'));
+
+      service.getDetails(request, (place, status) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+          const reviewsContainer = document.getElementById('reviews');
+          place.reviews.forEach(review => {
+            const reviewEl = document.createElement('div');
+            reviewEl.innerHTML = `
+              <strong>${review.author_name}</strong> - ${review.rating}★<br>
+              ${review.text}<hr>
+            `;
+            reviewsContainer.appendChild(reviewEl);
+          });
+        }
+      });
+    }
+    window.onload = initialize;
+  </script>
+</head>
+<body>
+  <h2>Customer Reviews</h2>
+  <div id="reviews"></div>
+</body>
+</html>
