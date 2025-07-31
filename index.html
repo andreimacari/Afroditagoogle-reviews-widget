@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <title>Recenzii Clienți</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
+
   <!-- Swiper CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-  
+
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  
+
   <style>
     body {
       background-color: #fdf8f9;
@@ -26,17 +26,27 @@
       margin-bottom: 30px;
     }
 
+    .swiper-container-wrapper {
+      overflow: hidden;
+      width: 100%;
+    }
+
     .swiper {
       width: 90%;
       max-width: 900px;
       margin: auto;
+      overflow: hidden;
     }
 
     .swiper-slide {
       background: #ffffff;
       border-radius: 15px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
       padding: 20px;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      max-height: 260px;
+      overflow-y: auto;
     }
 
     .review-author {
@@ -53,17 +63,26 @@
       margin-top: 10px;
       font-size: 15px;
       line-height: 1.6;
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .swiper-pagination {
+      text-align: center;
+      margin-top: 15px;
     }
   </style>
 </head>
 <body>
   <h2>Ce spun clienții noștri</h2>
 
-  <div class="swiper">
-    <div class="swiper-wrapper" id="reviews"></div>
+  <div class="swiper-container-wrapper">
+    <div class="swiper">
+      <div class="swiper-wrapper" id="reviews"></div>
 
-    <!-- Pagination -->
-    <div class="swiper-pagination"></div>
+      <!-- Pagination -->
+      <div class="swiper-pagination"></div>
+    </div>
   </div>
 
   <!-- Swiper JS -->
@@ -77,7 +96,7 @@
   <script>
     function initialize() {
       const request = {
-        placeId: 'ChIJGdw8SgB9yUARn6eDokM6r98',
+        placeId: 'ChIJGdw8SgB9yUARn6eDokM6r98', // Replace with your actual place ID
         fields: ['name', 'rating', 'reviews']
       };
 
@@ -88,18 +107,20 @@
           const reviewsContainer = document.getElementById('reviews');
           place.reviews.forEach(review => {
             const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
+            const trimmedText = review.text.length > 500
+              ? review.text.substring(0, 500) + '...'
+              : review.text;
 
             const slide = document.createElement('div');
             slide.className = 'swiper-slide';
             slide.innerHTML = `
               <div class="review-author">${review.author_name}</div>
               <div class="stars">${stars}</div>
-              <div class="review-text">${review.text}</div>
+              <div class="review-text">${trimmedText}</div>
             `;
             reviewsContainer.appendChild(slide);
           });
 
-          // Init Swiper
           new Swiper('.swiper', {
             loop: true,
             autoplay: {
