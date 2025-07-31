@@ -1,51 +1,79 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ro">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Google Reviews</title>
+  <meta charset="UTF-8">
+  <title>Recenzii Clienți</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB3IJx-psHu00yy5RJe05v-BBvUkadVapU&libraries=places&callback=initialize">
-  </script>
+  
   <style>
     body {
+      background-color: #fdf8f9;
       font-family: 'Inter', sans-serif;
-      background: #f9f9f9;
-      padding: 40px;
       margin: 0;
-      color: #333;
+      padding: 40px 0;
+      color: #2b2b2b;
     }
+
     h2 {
       text-align: center;
-      color: #2c3e50;
-      margin-bottom: 40px;
+      color: #b96c88;
+      margin-bottom: 30px;
     }
-    .review {
+
+    .swiper {
+      width: 90%;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .swiper-slide {
       background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
       padding: 20px;
-      margin-bottom: 20px;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
     }
-    .review strong {
-      font-size: 1.1em;
-      color: #000;
+
+    .review-author {
+      font-weight: 600;
+      color: #2b2b2b;
     }
+
     .stars {
-      color: #f1c40f;
+      color: #dba0b3;
       margin: 5px 0;
-      font-size: 16px;
     }
+
     .review-text {
-      font-size: 15px;
       margin-top: 10px;
-      line-height: 1.5;
+      font-size: 15px;
+      line-height: 1.6;
     }
   </style>
+</head>
+<body>
+  <h2>Ce spun clienții noștri</h2>
+
+  <div class="swiper">
+    <div class="swiper-wrapper" id="reviews"></div>
+
+    <!-- Pagination -->
+    <div class="swiper-pagination"></div>
+  </div>
+
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+  <!-- Google Maps Places API -->
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB3IJx-psHu00yy5RJe05v-BBvUkadVapU&libraries=places&callback=initialize&language=ro">
+  </script>
+
   <script>
     function initialize() {
       const request = {
@@ -59,25 +87,33 @@
         if (status === google.maps.places.PlacesServiceStatus.OK) {
           const reviewsContainer = document.getElementById('reviews');
           place.reviews.forEach(review => {
-            const reviewEl = document.createElement('div');
-            reviewEl.className = 'review';
-
             const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
 
-            reviewEl.innerHTML = `
-              <strong>${review.author_name}</strong>
+            const slide = document.createElement('div');
+            slide.className = 'swiper-slide';
+            slide.innerHTML = `
+              <div class="review-author">${review.author_name}</div>
               <div class="stars">${stars}</div>
               <div class="review-text">${review.text}</div>
             `;
-            reviewsContainer.appendChild(reviewEl);
+            reviewsContainer.appendChild(slide);
+          });
+
+          // Init Swiper
+          new Swiper('.swiper', {
+            loop: true,
+            autoplay: {
+              delay: 4000,
+              disableOnInteraction: false,
+            },
+            pagination: {
+              el: '.swiper-pagination',
+              clickable: true,
+            },
           });
         }
       });
     }
   </script>
-</head>
-<body>
-  <h2>Ce spun clienții noștri</h2>
-  <div id="reviews"></div>
 </body>
 </html>
