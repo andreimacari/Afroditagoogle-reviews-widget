@@ -7,8 +7,6 @@
 
   <!-- Swiper CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
@@ -26,16 +24,15 @@
       margin-bottom: 30px;
     }
 
-    .swiper-container-wrapper {
-      overflow: hidden;
-      width: 100%;
-    }
-
     .swiper {
       width: 90%;
       max-width: 900px;
       margin: auto;
-      overflow: hidden;
+    }
+
+    .swiper-wrapper {
+      display: flex;
+      align-items: stretch;
     }
 
     .swiper-slide {
@@ -45,8 +42,10 @@
       padding: 20px;
       word-wrap: break-word;
       overflow-wrap: break-word;
-      max-height: 260px;
-      overflow-y: auto;
+      height: auto !important;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
     }
 
     .review-author {
@@ -64,25 +63,20 @@
       font-size: 15px;
       line-height: 1.6;
       word-break: break-word;
-      overflow-wrap: break-word;
     }
 
     .swiper-pagination {
       text-align: center;
-      margin-top: 15px;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
   <h2>Ce spun clienții noștri</h2>
 
-  <div class="swiper-container-wrapper">
-    <div class="swiper">
-      <div class="swiper-wrapper" id="reviews"></div>
-
-      <!-- Pagination -->
-      <div class="swiper-pagination"></div>
-    </div>
+  <div class="swiper">
+    <div class="swiper-wrapper" id="reviews"></div>
+    <div class="swiper-pagination"></div>
   </div>
 
   <!-- Swiper JS -->
@@ -107,30 +101,29 @@
           const reviewsContainer = document.getElementById('reviews');
           place.reviews.forEach(review => {
             const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
-            const trimmedText = review.text.length > 500
-              ? review.text.substring(0, 500) + '...'
-              : review.text;
 
             const slide = document.createElement('div');
             slide.className = 'swiper-slide';
             slide.innerHTML = `
               <div class="review-author">${review.author_name}</div>
               <div class="stars">${stars}</div>
-              <div class="review-text">${trimmedText}</div>
+              <div class="review-text">${review.text}</div>
             `;
             reviewsContainer.appendChild(slide);
           });
 
           new Swiper('.swiper', {
-            loop: true,
-            autoplay: {
-              delay: 4000,
-              disableOnInteraction: false,
-            },
+            slidesPerView: 1,
+            spaceBetween: 30,
             pagination: {
               el: '.swiper-pagination',
               clickable: true,
             },
+            // Removed loop to avoid clone slide artifacts
+            autoplay: {
+              delay: 5000,
+              disableOnInteraction: false,
+            }
           });
         }
       });
